@@ -42,18 +42,33 @@ class App extends React.Component {
   addFish = fish => {
     // 1. take a copy of existing state (state should be immutable)
     const fishes = { ...this.state.fishes };
+
     // 2. add our new fish to fishes var
     fishes[`fish${Date.now()}`] = fish;
+
     // 3. set the new fishes object to state
     this.setState({ fishes });
   };
 
   updateFish = (key, updatedFish) => {
     // 1 take a copy of the current state
+
     const fishes = { ...this.state.fishes };
     // 2 update that state
     fishes[key] = updatedFish;
+
     // 3 set that to state
+    this.setState({ fishes });
+  };
+
+  deleteFish = key => {
+    // 1. take a copy of state
+    const fishes = { ...this.state.fishes };
+
+    // 2. update the state
+    fishes[key] = null;
+
+    // 3. set the state
     this.setState({ fishes });
   };
 
@@ -69,6 +84,27 @@ class App extends React.Component {
     order[key] = order[key] + 1 || 1;
 
     // call setState to update our state object
+    this.setState({ order });
+  };
+
+  removeFromOrder = key => {
+    // take a copy of state
+    const order = { ...this.state.order };
+
+    // remove item from order
+    // my attempt
+    // this moves a fish at a time, down to 0
+    // if (order[key] === 0) {
+    //   return (order[key] = 0);
+    // } else {
+    //   order[key] = order[key] - 1;
+    // }
+
+    // wes bos's way
+    // removes all of this fish
+    delete order[key];
+
+    // set the state
     this.setState({ order });
   };
 
@@ -89,10 +125,16 @@ class App extends React.Component {
             ))}
           </ul>
         </div>
-        <Order fishes={this.state.fishes} order={this.state.order} />
+        <Order
+          fishes={this.state.fishes}
+          order={this.state.order}
+          deleteFish={this.deleteFish}
+          removeFromOrder={this.removeFromOrder}
+        />
         <Inventory
           addFish={this.addFish}
           updateFish={this.updateFish}
+          deleteFish={this.deleteFish}
           loadSampleFishes={this.loadSampleFishes}
           fishes={this.state.fishes}
         />
